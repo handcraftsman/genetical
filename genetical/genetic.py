@@ -1,5 +1,5 @@
 
-# File: genetical.py
+# File: genetic.py
 #    from _Genetic Algorithms with Python_, an ebook
 #    available for purchase at http://leanpub.com/genetic_algorithms_with_python
 #
@@ -72,75 +72,70 @@ def get_best(get_fitness, targetLen, optimalFitness, geneSet,
              display, custom_mutate=None, custom_create=None,
              maxAge=None, poolSize=1, crossover=None,
              maxSeconds=None):
-	"""
-	attempts to find the set of genes with the best fitness.
-	
-	Args:
-		get_fitness (func (Cromosome) => object implementing __gt__): should return an value representing how close that particular candidate comes to the optimal solution.  Higher values are better. Object returned must at least implement __gt__
-		targetLen (int): length to use when creating gene sequences using the built in generator.
-		optimalFitness (object implementing __gt__): expected fitness value for the best solution. Stops execution if found.
-		geneSet (list): optional list of gene values for generating new gene sequences.  If not provided, custom_create must be provided.
-		display (func (Chromosome)): takes a Chromosome.  Called to provide visual output of better candidates as they are discovered.
-		custom_mutate (func (list(gene object))): optional replacement for the built in mutate function.  Called with an array of child genes.  Changes should be made to the child genes.
-		custom_create (func => list(gene object)): optional function to create a gene sequence.  If not provided, geneSet must be provided.
-		maxAge (int): number of rounds before a given genetic line is allowed to die out.
-		poolSize (int): number of parents in the pool.  Defaults to 1.
-		crossover (func (list(gene object), list(gene object))=> list(gene object)): crossover function. Called with the two parents, should return an array of genes.
-		maxSeconds (int): maximum number of seconds to run without improvement.
+    """
+    attempts to find the set of genes with the best fitness.
+    :param get_fitness: (func (Cromosome) => object implementing __gt__): should return an value representing how close that particular candidate comes to the optimal solution.  Higher values are better. Object returned must at least implement __gt__
+    :param targetLen: (int): length to use when creating gene sequences using the built in generator.
+    :param optimalFitness: (object implementing __gt__): expected fitness value for the best solution. Stops execution if found.
+    :param geneSet: (list): optional list of gene values for generating new gene sequences.  If not provided, custom_create must be provided.
+    :param display: (func (Chromosome)): Called to provide visual output of better candidates as they are discovered.
+    :param custom_mutate: (func (list(gene object))): optional replacement for the built in mutate function.  Called with an array of child genes.  Changes should be made to the child genes.
+    :param custom_create: (func => list(gene object)): optional function to create a gene sequence.  If not provided, geneSet must be provided.
+    :param maxAge: (int): number of rounds before a given genetic line is allowed to die out.
+    :param poolSize: (int): number of parents in the pool.  Defaults to 1.
+    :param crossover: (func (list(gene object), list(gene object))=> list(gene object)): crossover function. Called with the two parents, should return an array of genes.
+    :param maxSeconds: (int): maximum number of seconds to run without improvement.
+    :return: a Chromosome object
 
-	Returns:
-		a Chromosome object
-	 
-	Examples:
-	
-		import datetime
-		import genetical
-		import unittest
-		import random
+    Examples:
+
+        import datetime
+        from genetical import genetic
+        import unittest
 
 
-		def get_fitness(guess, target):
-			return sum(1 for expected, actual in zip(target, guess)
-					   if expected == actual)
+        def get_fitness(guess, target):
+            return sum(1 for expected, actual in zip(target, guess)
+                       if expected == actual)
 
 
-		def display(candidate, startTime):
-			timeDiff = datetime.datetime.now() - startTime
-			print("{0}\t{1}\t{2}".format(
-				''.join(candidate.Genes),
-				candidate.Fitness,
-				str(timeDiff)))
+        def display(candidate, startTime):
+            timeDiff = datetime.datetime.now() - startTime
+            print("{0}\t{1}\t{2}".format(
+                ''.join(candidate.Genes),
+                candidate.Fitness,
+                str(timeDiff)))
 
 
-		class GuessPasswordTests(unittest.TestCase):
-			geneset = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!.,"
+        class GuessPasswordTests(unittest.TestCase):
+            geneset = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!.,"
 
-			def test_Hello_World(self):
-				target = "Hello World!"
-				self.guess_password(target)
+            def test_Hello_World(self):
+                target = "Hello World!"
+                self.guess_password(target)
 
-			def test_For_I_am_fearfully_and_wonderfully_made(self):
-				target = "For I am fearfully and wonderfully made."
-				self.guess_password(target)
+            def test_For_I_am_fearfully_and_wonderfully_made(self):
+                target = "For I am fearfully and wonderfully made."
+                self.guess_password(target)
 
-			def guess_password(self, target):
-				startTime = datetime.datetime.now()
+            def guess_password(self, target):
+                startTime = datetime.datetime.now()
 
-				def fnGetFitness(genes):
-					return get_fitness(genes, target)
+                def fnGetFitness(genes):
+                    return get_fitness(genes, target)
 
-				def fnDisplay(candidate):
-					display(candidate, startTime)
+                def fnDisplay(candidate):
+                    display(candidate, startTime)
 
-				optimalFitness = len(target)
-				best = genetical.get_best(fnGetFitness, len(target),
-										  optimalFitness, self.geneset, fnDisplay)
+                optimalFitness = len(target)
+                best = genetic.get_best(fnGetFitness, len(target),
+                                        optimalFitness, self.geneset, fnDisplay)
 
-				self.assertEqual(''.join(best.Genes), target)
-				
-		if __name__ == '__main__':
-			unittest.main()
-	"""
+                self.assertEqual(''.join(best.Genes), target)
+
+        if __name__ == '__main__':
+            unittest.main()
+    """
     if custom_mutate is None:
         def fnMutate(parent):
             return _mutate(parent, geneSet, get_fitness)

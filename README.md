@@ -4,9 +4,8 @@ Genetic Algorithm engine built in [Genetic Algorithms with Python](https://leanp
 ## Example
 
 	import datetime
-	import genetical
+	from genetical import genetic
 	import unittest
-	import random
     
     
 	def get_fitness(guess, target):
@@ -43,8 +42,8 @@ Genetic Algorithm engine built in [Genetic Algorithms with Python](https://leanp
 				display(candidate, startTime)
 
 			optimalFitness = len(target)
-			best = genetical.get_best(fnGetFitness, len(target),
-									  optimalFitness, self.geneset, fnDisplay)
+			best = genetic.get_best(fnGetFitness, len(target),
+									optimalFitness, self.geneset, fnDisplay)
 
 			self.assertEqual(''.join(best.Genes), target)
     			
